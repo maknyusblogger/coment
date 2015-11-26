@@ -1,10 +1,10 @@
 (function() {
-      var items = <data:post.commentJso/>;
-      var msgs = <data:post.commentMsgs/>;
-      var config = <data:post.commentConfig/>;
-// <![CDATA[
+      var items = &lt;data:post.commentJso/&gt;;
+      var msgs = &lt;data:post.commentMsgs/&gt;;
+      var config = &lt;data:post.commentConfig/&gt;;
+// &lt;![CDATA[
       var cursor = null;
-      if (items && items.length > 0) {
+      if (items &amp;&amp; items.length &gt; 0) {
         cursor = parseInt(items[items.length - 1].timestamp) + 1;
       }
 
@@ -12,7 +12,7 @@
         if (entry.gd$extendedProperty) {
           for (var k in entry.gd$extendedProperty) {
             if (entry.gd$extendedProperty[k].name == 'blogger.contentRemoved') {
-              return '<span class="deleted-comment">' + entry.content.$t + '</span>';
+              return '&lt;span class=&quot;deleted-comment&quot;&gt;' + entry.content.$t + '&lt;/span&gt;';
             }
           }
         }
@@ -22,7 +22,7 @@
       var parse = function(data) {
         cursor = null;
         var comments = [];
-        if (data && data.feed && data.feed.entry) {
+        if (data &amp;&amp; data.feed &amp;&amp; data.feed.entry) {
           for (var i = 0, entry; entry = data.feed.entry[i]; i++) {
             var comment = {};
             // comment ID, parsed out of the original id format
@@ -30,7 +30,7 @@
             comment.id = id ? id[2] : null;
             comment.body = bodyFromEntry(entry);
             comment.timestamp = Date.parse(entry.published.$t) + '';
-            if (entry.author && entry.author.constructor === Array) {
+            if (entry.author &amp;&amp; entry.author.constructor === Array) {
               var auth = entry.author[0];
               if (auth) {
                 comment.author = {
@@ -46,7 +46,7 @@
               }
               if (entry.link[3]) {
                 var pid = /.*comments\/default\/(\d+)\?.*/.exec(entry.link[3].href);
-                if (pid && pid[1]) {
+                if (pid &amp;&amp; pid[1]) {
                   comment.parentId = pid[1];
                 }
               }
@@ -69,18 +69,18 @@
 
       var paginator = function(callback) {
         if (hasMore()) {
-          var url = config.feed + '?alt=json&v=2&orderby=published&reverse=false&max-results=50';
+          var url = config.feed + '?alt=json&amp;v=2&amp;orderby=published&amp;reverse=false&amp;max-results=50';
           if (cursor) {
-            url += '&published-min=' + new Date(cursor).toISOString();
+            url += '&amp;published-min=' + new Date(cursor).toISOString();
           }
           window.bloggercomments = function(data) {
             var parsed = parse(data);
-            cursor = parsed.length < 50 ? null
+            cursor = parsed.length &lt; 50 ? null
                 : parseInt(parsed[parsed.length - 1].timestamp) + 1
             callback(parsed);
             window.bloggercomments = null;
           }
-          url += '&callback=bloggercomments';
+          url += '&amp;callback=bloggercomments';
           var script = document.createElement('script');
           script.type = 'text/javascript';
           script.src = url;
@@ -93,12 +93,12 @@
       var getMeta = function(key, comment) {
         if ('iswriter' == key) {
           var matches = !!comment.author
-              && comment.author.name == config.authorName
-              && comment.author.profileUrl == config.authorUrl;
+              &amp;&amp; comment.author.name == config.authorName
+              &amp;&amp; comment.author.profileUrl == config.authorUrl;
           return matches ? 'true' : '';
         } else if ('deletelink' == key) {
           return config.baseUri + '/delete-comment.g?blogID='
-               + config.blogId + '&postID=' + comment.id;
+               + config.blogId + '&amp;postID=' + comment.id;
         } else if ('deleteclass' == key) {
           return comment.deleteclass;
         }
@@ -119,11 +119,11 @@
             replyUrlParts = replybox.src.split('#');
           }
         }
-        if (replybox && (commentId !== replyParent)) {
+        if (replybox &amp;&amp; (commentId !== replyParent)) {
           replybox.src = '';
           document.getElementById(domId).insertBefore(replybox, null);
           replybox.src = replyUrlParts[0]
-              + (commentId ? '&parentID=' + commentId : '')
+              + (commentId ? '&amp;parentID=' + commentId : '')
               + '#' + replyUrlParts[1];
           replyParent = commentId;
         }
@@ -156,14 +156,14 @@
       };
 
       var render = function() {
-        if (window.goog && window.goog.comments) {
+        if (window.goog &amp;&amp; window.goog.comments) {
           var holder = document.getElementById('comment-holder');
           window.goog.comments.render(holder, provider);
         }
       };
 
       // render now, or queue to render when library loads:
-      if (window.goog && window.goog.comments) {
+      if (window.goog &amp;&amp; window.goog.comments) {
         render();
       } else {
         window.goog = window.goog || {};
@@ -172,4 +172,4 @@
         window.goog.comments.loadQueue.push(render);
       }
     })();
-// ]]>
+// ]]&gt;
